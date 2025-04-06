@@ -11,16 +11,43 @@
             font-family: 'Inter', sans-serif;
         }
     </style>
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert(response.message);
+                            window.location.href = '/music_list';
+                        } else {
+                            alert(response.message);
+                        }
+                    } else {
+                        alert('请求出错！');
+                    }
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto p-8">
         <h1 class="text-3xl font-bold text-center mb-8">AI原创音乐</h1>
-        <form action="/upload" method="post" enctype="multipart/form-data" class="bg-white p-8 rounded shadow-md">
+        <form enctype="multipart/form-data" class="bg-white p-8 rounded shadow-md">
             <div class="mb-4">
                 <label for="file" class="block text-gray-700 text-sm font-bold mb-2">选择要上传的 MIDI 文件</label>
                 <input type="file" id="file" name="file" class="border border-gray-300 p-2 w-full">
             </div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">上传文件</button>
+            <button type="button" onclick="uploadFile()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">上传文件</button>
         </form>
         <h2 class="text-2xl font-bold mt-8 mb-4">已上传的音乐</h2>
         <ul>
@@ -33,3 +60,4 @@
     </div>
 </body>
 </html>
+    
